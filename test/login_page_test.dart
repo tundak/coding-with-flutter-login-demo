@@ -31,14 +31,14 @@ void main() {
 
     await tester.tap(find.byKey(Key('signIn')));
 
-    verifyNever(mockAuth.signInWithEmailAndPassword('', ''));
+    verifyNever(mockAuth.httpSignIn('', ''));
     expect(didSignIn, false);
   });
 
   testWidgets('non-empty email and password, valid account, call sign in, succeed', (WidgetTester tester) async {
 
     MockAuth mockAuth = MockAuth();
-    when(mockAuth.signInWithEmailAndPassword('email', 'password')).thenAnswer((invocation) => Future.value('uid'));
+    when(mockAuth.httpSignIn('email', 'password')).thenAnswer((invocation) => Future<dynamic>.value('uid'));
 
     bool didSignIn = false;
     LoginPage page = LoginPage(onSignedIn: () => didSignIn = true);
@@ -53,7 +53,7 @@ void main() {
 
     await tester.tap(find.byKey(Key('signIn')));
 
-    verify(mockAuth.signInWithEmailAndPassword('email', 'password')).called(1);
+    verify(mockAuth.httpSignIn('email', 'password')).called(1);
     expect(didSignIn, true);
     
   });
@@ -61,7 +61,7 @@ void main() {
   testWidgets('non-empty email and password, valid account, call sign in, fails', (WidgetTester tester) async {
 
     MockAuth mockAuth = MockAuth();
-    when(mockAuth.signInWithEmailAndPassword('email', 'password')).thenThrow(StateError('invalid credentials'));
+    when(mockAuth.httpSignIn('email', 'password')).thenThrow(StateError('invalid credentials'));
 
     bool didSignIn = false;
     LoginPage page = LoginPage(onSignedIn: () => didSignIn = true);
@@ -76,7 +76,7 @@ void main() {
 
     await tester.tap(find.byKey(Key('signIn')));
 
-    verify(mockAuth.signInWithEmailAndPassword('email', 'password')).called(1);
+    verify(mockAuth.httpSignIn('email', 'password')).called(1);
     expect(didSignIn, false);
 
   });

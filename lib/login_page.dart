@@ -48,11 +48,10 @@ class _LoginPageState extends State<LoginPage> {
       try {
         final BaseAuth auth = AuthProvider.of(context).auth;
         if (_formType == FormType.login) {
-          final String userId = await auth.signInWithEmailAndPassword(_email, _password);
+          final String userId = await auth.httpSignIn(_email, _password);
           print('Signed in: $userId');
         } else {
-          final String userId = await auth.createUserWithEmailAndPassword(_email, _password);
-          print('Registered user: $userId');
+          //do on register api call here
         }
         widget.onSignedIn();
       } catch (e) {

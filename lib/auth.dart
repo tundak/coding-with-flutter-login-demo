@@ -1,36 +1,44 @@
 import 'dart:async';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:login_demo/network_utils.dart';
+
+
+NetworkUtil _netUtil = new NetworkUtil();
+final BASE_URL = "";
 
 abstract class BaseAuth {
-  Future<String> signInWithEmailAndPassword(String email, String password);
-  Future<String> createUserWithEmailAndPassword(String email, String password);
+  Future<dynamic> httpSignIn(String email, String password);
   Future<String> currentUser();
   Future<void> signOut();
 }
 
 class Auth implements BaseAuth {
-  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
   @override
-  Future<String> signInWithEmailAndPassword(String email, String password) async {
-    final FirebaseUser user = (await _firebaseAuth.signInWithEmailAndPassword(email: email, password: password)).user;
-    return user?.uid;
-  }
+  Future<dynamic> httpSignIn(String email, String password) async {
+    return _netUtil.post(BASE_URL + "login", body: {
+      "email": email,
+      "password": password
+    }).then((dynamic res) {
+      if (res["status"] ==  false) {
+        throw(res["msg"]);
 
-  @override
-  Future<String> createUserWithEmailAndPassword(String email, String password) async {
-    final FirebaseUser user = (await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password)).user;
-    return user?.uid;
+      }else{
+        print(res["result"]["email"]);
+      }
+      return res["result"]["email"];
+
+    });
   }
 
   @override
   Future<String> currentUser() async {
-    final FirebaseUser user = await _firebaseAuth.currentUser();
-    return user?.uid;
+    //check current user stuff here like saved in db user and return userId if already signed in or null for new signin
+    return null;
   }
 
   @override
   Future<void> signOut() async {
-    return _firebaseAuth.signOut();
+    //do on logout stuff here
+    return true;
   }
 }
