@@ -3,7 +3,7 @@ import 'package:login_demo/network_utils.dart';
 
 
 NetworkUtil _netUtil = new NetworkUtil();
-final BASE_URL = "";
+final BASE_URL = "https://example.com/api/";
 
 abstract class BaseAuth {
   Future<dynamic> httpSignIn(String email, String password);
